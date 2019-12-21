@@ -1,69 +1,44 @@
-/*
- * Sieve of Eratosthenes is an algorithm to find the primes 
- * that is between 2 to N (as defined in main).
- *
- * Time Complexity  : O(N * log N)
- * Space Complexity : O(N)
- */
-
 #include <iostream>
-using namespace std;
+#include <ctime>
 
-#define MAX 10000000
-
-int isprime[MAX];
-
-/*
- * This is the function that finds the primes and eliminates 
- * the multiples.
- */
-void sieve(int N)
-{
-    isprime[0] = 0;
-    isprime[1] = 0;
-    for (int i = 2; i <= N; i++)
-    {
-        if (isprime[i])
-        {
-            for (int j = i * 2; j <= N; j += i)
-            {
-                isprime[j] = 0;
-            }
-        }
+void getArray(int a[], int n){
+    if(n > 0){
+    a[n] = 1;
+    getArray(a, n - 1);
+    }
+    else
+    return;
+}
+void changeValue(int a[], int n, int j, int i){
+    if(j <= n){
+        a[j] = 0;
+        changeValue(a, n, j + i, i);
     }
 }
 
-/*
- * This function prints out the primes to STDOUT
- */
-void print(int N)
-{
-    for (int i = 1; i <= N; i++)
-    {
-        if (isprime[i] == 1)
-        {
-            cout << i << ' ';
-        }
-    }
-    cout << '\n';
+void primes(int a[], int n, int i = 2){
+    a[0] = 0;
+    a[1] = 0;
+    if(a[i])
+    changeValue(a,n,2*i,i);
+    if(i < n)
+    primes(a, n , i + 1);
 }
 
-/*
- * NOTE: This function is important for the 
- * initialization of the array.
- */
-void init()
-{
-    for (int i = 1; i < MAX; i++)
-    {
-        isprime[i] = 1;
-    }
+void printnr(int a[], int n, int i = 2){
+    if(a[i])
+    std::cout << i << " ";
+    if(i < n)
+    printnr(a,n,i + 1);
 }
 
 int main()
 {
-    int N = 100;
-    init();
-    sieve(N);
-    print(N);
+    int a[10000000], n = 10000000;
+    int start = clock();
+    getArray(a,n);
+    primes(a,n);
+    printnr(a,n);
+    int stop = clock();
+    std::cout << std::endl << (stop - start) / double(CLOCKS_PER_SEC) * 1000;
 }
